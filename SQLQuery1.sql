@@ -135,5 +135,92 @@ FROM Orders
 GROUP BY product_name
 HAVING SUM(order_quantity) > 10;
 
+SELECT *
+FROM Orders
+ORDER BY profit DESC;
 
+SELECT customer_name, SUM(value) as total_value
+FROM Orders
+GROUP BY customer_name
+ORDER BY SUM(value) DESC;
+
+--JOIN
+SELECT * FROM Orders;
+SELECT * FROM Returns;
+
+SELECT o.order_id, order_date, product_name, returned_date
+FROM Orders o
+JOIN Returns r
+ON o.order_id = r.order_id;
+
+SELECT o.order_id, order_date, product_name, returned_date
+FROM Orders o
+LEFT JOIN Returns r
+ON o.order_id = r.order_id;
+
+SELECT 
+Orders.order_id,
+order_date,
+SUM(order_quantity) as total_order_quantity,
+SUM(value) as total_value,
+SUM(profit) as total_profit,
+returned_date
+FROM Orders
+JOIN Returns
+ON Orders.order_id = Returns.order_id
+GROUP BY Orders.order_id,
+order_date,returned_date;
+
+select p.manager,
+sum(order_quantity) AS total_order_quantity,
+sum(value) AS total_value,
+sum(profit) AS total_profit
+from Orders AS o
+left join Profiles AS p
+on o.province=p.province
+group by p.manager
+
+--UNION
+
+Select order_priority, sum(profit) AS total_profit
+From Orders
+Where order_priority = 'Not Specified'
+Group by order_priority
+Union all
+Select order_priority, sum(profit) AS total_profit
+From Orders
+Where order_priority = 'Low'
+Group by order_priority
+Union all
+Select order_priority, sum(profit) AS total_profit
+From Orders
+Where order_priority = 'High'
+Group by order_priority
+Union all
+Select order_priority, sum(profit) AS total_profit
+From Orders
+Where order_priority = 'Medium'
+Group by order_priority
+Union all
+Select order_priority, sum(profit) AS total_profit
+From Orders
+Where order_priority = 'Critical'
+Group by order_priority;
+
+--CASE WHEN
+
+SELECT 
+	CASE 
+		WHEN discount = 0 THEN 'No Discout'
+		ELSE 'Discout' 
+		END
+FROM Orders;
+
+SELECT
+	(CASE 
+		WHEN value > 1000 THEN 'HIGHT'
+		WHEN value BETWEEN 200 AND 1000 THEN 'MEDIUM'
+		WHEN value < 200 THEN 'LOW'
+		END) as range_value
+FROM Orders;
 
