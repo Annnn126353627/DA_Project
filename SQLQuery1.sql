@@ -224,3 +224,31 @@ SELECT
 		END) as range_value
 FROM Orders;
 
+--truy vấn con
+
+SELECT 
+product_name,
+SUM(value) as total_value,
+(
+SELECT AVG(value) FROM Orders
+) as avg_value
+FROM Orders
+GROUP BY product_name;
+
+SELECT * FROM 
+(
+SELECT product_name, sum(value) as total_value
+from Orders
+Group by product_name
+) A
+Where total_value > (SELECT avg(value) from orders)
+
+--CTE: là một bảng chứa dữ liệu tạm thời từ câu lệnh được định nghĩa trong phạm vi của nó
+with A as 
+(
+	SELECT customer_name,
+			COUNT(order_id) as count_orders
+	FROM Orders
+	GROUP BY customer_name
+)
+SELECT * FROM A WHERE count_orders > 10;
